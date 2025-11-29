@@ -6,32 +6,27 @@
 <title>ARAMEX Tracking</title>
 <style>
   :root{
-    --page-bg: #b30000;        /* initial (welcome) red */
-    --welcome-bg: #b30000;     /* red */
-    --input-bg: #ffd54f;       /* yellow for input screen */
-    --accent: #ffd700;         /* accent (gold) for agent */
+    --brand-red:#b30000;
+    --brand-yellow:#ffcc00;
     --muted:#f5f5f5;
     --card-bg: rgba(255,255,255,0.06);
+    --accent:#00ff00;
+    --agent-color:#00ffff;
     --max-width:920px;
   }
   *{box-sizing:border-box}
-  html,body{height:100%;margin:0;font-family:Inter,Arial,Helvetica,sans-serif;background:var(--page-bg);color:var(--muted);-webkit-font-smoothing:antialiased;transition:background-color .45s ease}
-  .container{max-width:var(--max-width);margin:20px auto;padding:18px}
-  .logo{font-weight:900;color:#fff;text-align:center;font-size:34px;letter-spacing:3px;text-shadow:0 3px 8px rgba(0,0,0,0.35)}
-  .card{background:var(--card-bg);border-radius:12px;padding:16px;margin-top:14px;box-shadow:0 8px 30px rgba(0,0,0,0.35)}
-  .grid{display:flex;flex-direction:column;gap:12px}
-  @media(min-width:900px){ .grid{flex-direction:row} .left{flex:1 1 60%} .right{flex:1 1 40%} }
-
-  /* welcome card special */
-  #welcomeCard { border: 2px solid rgba(255,255,255,0.06); }
-  #welcomeCard h2{margin:6px 0 8px;color:#fff}
+  html,body{height:100%;margin:0;font-family:Inter,Arial,Helvetica,sans-serif;background:var(--brand-red);color:var(--muted);-webkit-font-smoothing:antialiased}
+  .container{max-width:var(--max-width);margin:26px auto;padding:18px}
+  .logo{font-weight:900;color:#ffe6e6;text-align:center;font-size:36px;letter-spacing:3px;text-shadow:0 3px 10px rgba(0,0,0,0.35)}
+  .card{background:var(--card-bg);border-radius:12px;padding:18px;margin-top:18px;box-shadow:0 8px 30px rgba(0,0,0,0.45)}
+  .grid{display:flex;flex-direction:column;gap:16px}
+  @media(min-width:920px){ .grid{flex-direction:row} .left{flex:1 1 60%} .right{flex:1 1 40%} }
 
   /* map area (static) */
-  .map-card{position:relative;border-radius:10px;overflow:hidden;background:linear-gradient(180deg,#243028,#1b2a20);min-height:220px}
+  .map-card{position:relative;border-radius:10px;overflow:hidden;background:linear-gradient(180deg,#263238,#1b2428);min-height:280px}
   svg.map{width:100%;height:100%;display:block}
-  circle.marker{fill:#fff;stroke:rgba(0,0,0,0.18);stroke-width:2;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.5))}
 
-  /* form / controls */
+  /* controls */
   .controls{display:flex;gap:8px;align-items:center}
   input[type="text"]{flex:1;padding:10px 12px;border-radius:8px;border:none;font-size:15px}
   button.btn{background:#0b0b0b;color:white;border:none;padding:10px 12px;border-radius:8px;font-weight:700;cursor:pointer}
@@ -39,110 +34,78 @@
 
   /* loader */
   .loader{display:none;margin-top:12px;text-align:center}
-  .loader-inner{display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center;padding:8px}
-  .load-text{font-weight:700;color:#fff}
+  .loader-inner{display:flex;flex-direction:column;gap:10px;align-items:center;justify-content:center;padding:8px}
+  .load-text{font-weight:700;color: #fff}
   .progress{width:88%;height:8px;background:rgba(255,255,255,0.12);border-radius:10px;overflow:hidden}
   .progress > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),#ffb86b);transition:width 0.2s linear}
 
-  /* results */
-  .result{display:none;margin-top:12px;padding:12px;border-radius:10px;background:rgba(0,0,0,0.25);color:var(--muted)}
-  .result h3{margin:0 0 8px 0;color:#fff}
-  .line{opacity:0;transform:translateY(8px);transition:opacity .42s ease, transform .42s ease;margin:6px 0}
-  .line.show{opacity:1;transform:translateY(0)}
-  .muted{opacity:.85;font-size:13px}
+  /* result panel */
+  .result{display:none;margin-top:12px;padding:14px;border-radius:10px;background:rgba(0,0,0,0.25);color:var(--accent)}
+  .result h3{margin:0 0 8px 0;color:#00ff00}
+  .line{opacity:0;transform:translateY(8px);transition:opacity .48s ease, transform .48s ease;margin:8px 0}
 
-  /* footer info (sender/agent) shown after code */
-  .footer-inline{margin-top:10px;font-size:13px;color:#fff;opacity:.95}
-  .footer-inline .agent{color:var(--accent);font-weight:700}
+  /* footer */
+  .foot{font-size:12px;text-align:center;opacity:.85;margin-top:10px}
 
-  /* small */
+  /* small nicety */
   .small{font-size:13px}
-
-  /* helper to style the input-pane when visible */
-  .input-pane { padding: 14px; border-radius: 10px; transition: background .3s ease; }
-  .input-pane.yellow { background: var(--input-bg); color: #000; }
-  .input-pane.default { background: transparent; color: var(--muted); }
-
-  /* make links visible on dark bg */
-  a.email-link{color:#00ffff; text-decoration:underline}
-
-  /* responsive tweaks */
-  @media(max-width:520px){
-    .logo{font-size:28px}
-    input[type="text"]{font-size:14px}
-  }
 </style>
 </head>
 <body>
-
   <div class="container">
     <div class="logo">ARAMEX</div>
 
-    <!-- WELCOME CARD (red background from :root) -->
-    <div class="card" id="welcomeCard" aria-hidden="false">
-      <h2>Welcome to ARAMEX Tracking</h2>
-      <p class="muted">Secure tracking for your shipment. Tap <strong>Start Tracking</strong> to continue.</p>
-      <div style="margin-top:10px">
-        <button class="btn" onclick="showInputPane()">Start Tracking</button>
-      </div>
+    <!-- welcome card -->
+    <div class="card" id="welcomeCard">
+      <h2 style="margin:6px 0 6px; color: var(--brand-red)">Welcome to ARAMEX Tracking</h2>
+      <button class="btn" onclick="openTracker()">Start Tracking</button>
     </div>
 
-    <!-- TRACKING CARD -->
-    <div class="card" id="trackingCard" style="display:none">
+    <!-- main tracker -->
+    <div class="card" id="trackerCard" style="display:none">
       <div class="grid">
-        <!-- left: static SVG map -->
+        <!-- left: static map -->
         <div class="left">
-          <div class="map-card" id="mapCard" aria-hidden="true">
-            <svg class="map" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-              <!-- stylized land shape -->
+          <div class="map-card" id="mapCard">
+            <svg class="map" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet">
               <path d="M140,60 C180,50 240,45 320,70 C420,100 520,85 600,70 C740,40 860,60 880,150 C900,240 820,300 760,340 C700,380 640,420 560,470 C480,520 360,520 280,480 C220,450 170,410 150,330 C140,240 120,150 140,60 Z"
                     fill="#37474f" opacity="0.98"></path>
-              <!-- static markers (representational) -->
-              <circle class="marker" cx="820" cy="120" r="6"></circle>
-              <circle class="marker" cx="640" cy="380" r="6"></circle>
-              <circle class="marker" cx="560" cy="440" r="6"></circle>
             </svg>
           </div>
         </div>
 
-        <!-- right: controls & results -->
+        <!-- right: controls + results -->
         <div class="right">
-          <h3 style="margin:6px 0 6px">Track Your Shipment</h3>
+          <h3 style="margin:6px 0 6px; color: var(--brand-yellow)">Track Your Shipment</h3>
 
-          <!-- input pane: will get yellow background when shown -->
-          <div id="inputPane" class="input-pane default">
-            <div class="controls">
-              <input id="trackInput" type="text" placeholder="Enter Tracking Number (e.g. XXUK2357)">
-              <button id="trackBtn" class="btn" onclick="trackNow()">TRACK</button>
-            </div>
+          <div style="margin-top:8px" class="controls">
+            <input id="trackInput" type="text" placeholder="Enter Tracking Number (e.g. XXUK2357)">
+            <button id="trackBtn" class="btn" onclick="trackNow()">TRACK</button>
+          </div>
 
-            <div id="loader" class="loader" aria-hidden="true">
-              <div class="loader-inner">
-                <div class="load-text">Processing tracking number…</div>
-                <div class="progress"><i id="progBar"></i></div>
-              </div>
+          <div id="loader" class="loader" aria-hidden="true">
+            <div class="loader-inner">
+              <div class="load-text">Processing tracking number…</div>
+              <div class="progress"><i id="progBar"></i></div>
             </div>
           </div>
 
-          <!-- results -->
           <div id="result" class="result" aria-hidden="true">
             <h3>Tracking Result</h3>
             <div id="details" aria-live="polite"></div>
-            <div class="muted" style="margin-top:10px">Details will auto-hide after 2 minutes for privacy.</div>
-            <div class="footer-inline" id="footerInfo" style="display:none"></div>
+            <div class="muted" style="margin-top:10px; color: var(--accent)">Details will auto-hide after 2 minutes for privacy.</div>
           </div>
+
+          <div class="foot muted">Reach us at <a href="mailto:aramexglobaldelivery4@gmail.com" style="color: var(--accent)">aramexglobaldelivery4@gmail.com</a></div>
         </div>
       </div>
     </div>
   </div>
 
 <script>
-/* CONFIG */
 const UNIQUE_CODE = "XXUK2357";
-const REVEAL_INTERVAL = 420;    // ms between lines reveal
-const AUTO_HIDE_MS = 120000;    // 2 minutes
-
-/* TRACKING DETAILS (updated per your request) */
+const REVEAL_INTERVAL = 450;
+const AUTO_HIDE_MS = 120000;
 const TRACK_LINES = [
   "<b>Status:</b> On Hold",
   "<b>Origin:</b> South Africa",
@@ -150,62 +113,44 @@ const TRACK_LINES = [
   "<b>Destination:</b> Guyana",
   "<b>Item Quantity:</b> 1",
   "<b>Weight:</b> 14.2 kg",
-  "<b>Sender:</b> Prophet Shepherd Bushiri",
-  "<b>Receiver:</b> Nandani Narain",
-  "<b>Receiver Address:</b> Lot 354, 3rd Street, Grove Housing Scheme, East Bank Demerara",
+  "<b>Sender Name:</b> Prophet Shepherd Bushiri",
+  "<b>Sender Address:</b> South Africa",
+  "<b>Receiver Name:</b> Nandani Narain",
+  "<b>Receiver Address:</b> Lot 354 3rd street. Grove Housing Scheme. East Bank Demerara",
   "<b>Receiver Phone:</b> 266-35-06 / 680-4268",
-  "<b>Agent:</b> <span style='color:var(--accent)'>Mike</span>",
-  "<b>Last Update:</b> To be cleared for dispatch",
-  "<b>Reach us at:</b> <a class='email-link' href='mailto:aramexglobaldelivery4@gmail.com'>aramexglobaldelivery4@gmail.com</a>"
+  "<b>Agent:</b> <span style='color: var(--agent-color)'>Mike</span>",
+  "<b>Amount to be cleared:</b> $300 not yet paid"
 ];
 
 let revealTimers = [];
 let hideTimer = null;
 
-/* helpers to switch page background color */
-function setPageColorToWelcome(){ document.documentElement.style.setProperty('--page-bg', getComputedStyle(document.documentElement).getPropertyValue('--welcome-bg').trim()); }
-function setPageColorToInput(){ document.documentElement.style.setProperty('--page-bg', getComputedStyle(document.documentElement).getPropertyValue('--input-bg').trim()); }
-function setPageColorToRed(){ document.documentElement.style.setProperty('--page-bg', getComputedStyle(document.documentElement).getPropertyValue('--welcome-bg').trim()); }
-
-/* initial page state (welcome red already set by :root) */
-function showInputPane(){
-  // hide welcome, show tracking card
-  document.getElementById('welcomeCard').style.display = 'none';
-  const tc = document.getElementById('trackingCard');
+function openTracker(){
+  document.getElementById('welcomeCard')?.remove();
+  const tc = document.getElementById('trackerCard');
   tc.style.display = 'block';
-  // set input pane yellow
-  const inputPane = document.getElementById('inputPane');
-  inputPane.classList.remove('default');
-  inputPane.classList.add('yellow');
-  // set page background to yellow-like for input stage
-  setPageColorToInput();
-  // make sure result hidden
-  document.getElementById('result').style.display = 'none';
+  setTimeout(()=> tc.classList?.add('show'), 50);
 }
 
-/* reveal lines one-by-one */
 function revealDetails(lines){
   const details = document.getElementById('details');
   details.innerHTML = '';
-  // clear any old timers
   revealTimers.forEach(t => clearTimeout(t));
   revealTimers = [];
   let delay = 0;
-  lines.forEach((text) => {
+  lines.forEach((line) => {
     const t = setTimeout(()=>{
-      const row = document.createElement('div');
-      row.className = 'line';
-      row.innerHTML = text;
-      details.appendChild(row);
-      // small stagger to trigger transition
-      setTimeout(()=> row.classList.add('show'), 30);
+      const div = document.createElement('div');
+      div.className = 'line';
+      div.innerHTML = line;
+      details.appendChild(div);
+      setTimeout(()=> div.classList.add('show'), 40);
     }, delay);
     revealTimers.push(t);
     delay += REVEAL_INTERVAL;
   });
 }
 
-/* main track function */
 function trackNow(){
   const inputEl = document.getElementById('trackInput');
   const btn = document.getElementById('trackBtn');
@@ -213,77 +158,40 @@ function trackNow(){
   const prog = document.getElementById('progBar');
   const result = document.getElementById('result');
   const details = document.getElementById('details');
-  const footerInfo = document.getElementById('footerInfo');
 
   const val = (inputEl.value || '').replace(/\s+/g,'').toUpperCase();
   const required = UNIQUE_CODE.replace(/\s+/g,'').toUpperCase();
 
-  // reset any previous state
   clearTimeout(hideTimer);
   revealTimers.forEach(t => clearTimeout(t));
   revealTimers = [];
   details.innerHTML = '';
   result.style.display = 'none';
-  footerInfo.style.display = 'none';
-  footerInfo.innerHTML = '';
 
-  // disable UI while "loading"
   inputEl.disabled = true; btn.disabled = true;
-
-  // show loader
   loader.style.display = 'block';
   prog.style.width = '0%';
-  prog.style.transition = 'width 1800ms linear';
+  prog.style.transition = 'width 2000ms linear';
   setTimeout(()=> prog.style.width = '100%', 20);
 
-  // mimic processing delay
   setTimeout(()=>{
     loader.style.display = 'none';
     inputEl.disabled = false; btn.disabled = false;
 
-    // clear input field (auto-clear)
-    inputEl.value = '';
-
-    if (val === required){
-      // turn page background back to red
-      setPageColorToRed();
-      // remove yellow styling from input pane (so it blends with red)
-      const inputPane = document.getElementById('inputPane');
-      inputPane.classList.remove('yellow');
-      inputPane.classList.add('default');
-
-      // show results and reveal details
+    if(val === required){
       result.style.display = 'block';
       revealDetails(TRACK_LINES);
 
-      // show footer (sender/agent info)
-      footerInfo.style.display = 'block';
-      footerInfo.innerHTML = 'Sender: Prophet Shepherd Bushiri • Destination: Guyana • Agent: <span class="agent">Mike</span>';
-
-      // auto-hide after AUTO_HIDE_MS
       hideTimer = setTimeout(()=>{
         details.innerHTML = '';
         result.style.display = 'none';
-        footerInfo.style.display = 'none';
-        // set background back to input yellow so user can enter another (optional)
-        setPageColorToInput();
       }, AUTO_HIDE_MS);
     } else {
-      // invalid code
       result.style.display = 'block';
       details.innerHTML = '<div class="line show">❌ Invalid Tracking Number</div>';
     }
-  }, 1800);
+  }, 2000);
 }
-
-/* memory cleanup when page resized/navigated */
-window.addEventListener('beforeunload', ()=> {
-  revealTimers.forEach(t => clearTimeout(t));
-  clearTimeout(hideTimer);
-});
-
-/* set initial page color (welcome red) explicitly */
-setPageColorToWelcome();
 </script>
 </body>
 </html>
