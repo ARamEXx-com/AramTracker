@@ -6,17 +6,23 @@
 <title>ARAMEX Tracking</title>
 <style>
   :root{
-    --welcome-bg:#b30000; /* red */
-    --second-bg:#ffcc00;  /* yellow */
-    --result-bg:#b30000;  /* red again after code */
+    --bg-color:#b30000;  /* red background */
     --muted:#f5f5f5;
     --card-bg: rgba(0,0,0,0.2);
-    --accent:#00ff00;
-    --agent-color:#00ffff;
+    --accent:#ffffff;     /* all text in white */
+    --agent-color:#ffffff; /* agent name also white */
     --max-width:920px;
   }
   *{box-sizing:border-box}
-  html,body{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--welcome-bg);color:var(--muted);-webkit-font-smoothing:antialiased;transition:background 0.4s ease;}
+  html,body{
+    height:100%;
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:var(--bg-color);
+    color:var(--accent);
+    -webkit-font-smoothing:antialiased;
+    transition:background 0.4s ease;
+  }
   .container{max-width:var(--max-width);margin:30px auto;padding:20px}
   .logo{font-weight:900;color:#ffe6e6;text-align:center;font-size:36px;letter-spacing:3px;text-shadow:0 3px 12px rgba(0,0,0,0.35)}
   .card{background:var(--card-bg);border-radius:12px;padding:25px;margin-top:20px;box-shadow:0 8px 30px rgba(0,0,0,0.45);transition:all 0.3s ease}
@@ -39,7 +45,7 @@
 
   .result{display:none;margin-top:12px;padding:20px;border-radius:12px;background:rgba(0,0,0,0.25);color:var(--accent)}
   .result h3{margin:0 0 12px 0;color:var(--accent);font-size:22px}
-  .line{opacity:0;transform:translateY(10px);transition:opacity .5s ease, transform .5s ease;margin:8px 0;font-size:16px}
+  .line{opacity:0;transform:translateY(10px);transition:opacity .5s ease, transform .5s ease;margin:8px 0;font-size:16px;color:var(--accent)}
   .line.show{opacity:1;transform:translateY(0)}
   .agent{color:var(--agent-color);font-weight:bold}
   .foot{font-size:13px;text-align:center;opacity:.85;margin-top:15px}
@@ -59,7 +65,7 @@
     </div>
 
     <!-- main tracker -->
-    <div class="card" id="trackerCard" style="display:none;background:var(--second-bg)">
+    <div class="card" id="trackerCard" style="display:none;background:var(--bg-color)">
       <div class="grid">
         <div class="left">
           <div class="map-card">
@@ -123,7 +129,7 @@ function openTracker(){
   document.getElementById('welcomeCard')?.remove();
   const tc = document.getElementById('trackerCard');
   tc.style.display = 'block';
-  document.body.style.background = "var(--second-bg)";
+  document.body.style.background = "var(--bg-color)";
 }
 
 function revealDetails(lines){
@@ -173,7 +179,7 @@ function trackNow(){
     inputEl.disabled = false; btn.disabled = false;
 
     if(val === required){
-      document.body.style.background = "var(--result-bg)";
+      document.body.style.background = "var(--bg-color)";
       result.style.display = 'block';
       revealDetails(TRACK_LINES);
 
